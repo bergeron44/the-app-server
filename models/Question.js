@@ -5,29 +5,53 @@ title:{
     required:true,
 },
 answer1:{
-    type:String,
-    required:true,
+    answer:{
+               type:String,
+               required:true,
+           },
+    rightAnswer:{
+        type:Boolean,
+        default:false,
+    }
 },
 answer2:{
-    type:String,
-    required:true,
+    answer:{
+        type:String,
+        required:true,
+    },
+rightAnswer:{
+        type:Boolean,
+        default:false,
+}
 },
 answer3:{
-    type:String,
-    required:true,
+    answer:{
+        type:String,
+        required:true,
+    },
+rightAnswer:{
+        type:Boolean,
+        default:false,
+}
 },
 answer4:{
-    type:String,
-    required:true,
-},
-trueAnswer:{
-    type:String,
-    required:true,
+    answer:{
+        type:String,
+        required:true,
+    },
+     rightAnswer:{
+        type:Boolean,
+        default:false,
+}
 },
 difficulty:{
     type:String,
     enum:["EASY","MEDIUM","HARD"],
     default:"MEDIUM" ,
+},
+category:{
+    type:String,
+    default:"have no category",
 },
 img:{
     type:String,

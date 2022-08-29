@@ -1,69 +1,44 @@
 const Category = require('../models/Category')
 //import Question from '../models/Question'
 
-const getCategory = (categoryId) => {
-    return Category.findOne({_id: categoryId})
+const getCategory= (categoryName) => {
+    return Category.findOne({categoryName})
+
 }
+const getAllObjectsWithSameAttribute= (attribute, whatToCheck) => {
+    return Category.find({[attribute]: whatToCheck})
+}//get an attribute and bring baeck all the objects with the same attribute
 
 const getAllCategorys = () => {
     return Category.find({})
 }
 
-const getBulkCategorys = (categorysIdsList) => {
-    const categoryList = []
-    categorysIdsList.forEach(categoryId => {
-        const q = Category.findOne({_id: categoryId})
-        categoryList.push(q)
-    })
-    return categoryList
-}
-
-const addCategory = async (categoryObject) => {
+const addCategory =(categoryObject) =>{
     categoryObject = new Category(categoryObject)
     return categoryObject.save()
 }
 
-const removeCategory = (categoryId) => {
-    return Category.findOneAndRemove({_id: categoryId})
+const removeCategory = (categoryName) => {
+    return Category.findOneAndRemove({categoryName})
 }
 
-const removeAllCategorys = (categoryListIds) => {
-    categoryListIds.forEach(categoryId => {
-        Category.findOneAndRemove({_id: categoryId})
+const removeAllCategorys = (categoryListNames) => {
+    categoryListNames.forEach(categoryName => {
+        Category.findOneAndRemove({categoryName})
     })
 }
 
-const updateCategory = (categoryId, newContent) => {
-    return Category.findOneAndUpdate({_id:categoryId}, newContent, {new:true})
-}
-const getAllCategoryQuestions = (categoryId) => {
-    
-    return Category.findOne({_id: categoryId}).CategoryAllQuestion
-}
-const addQuestionToCategory = (categoryId,question) => {
-    
-    Category.findOne({_id: categoryId}).CategoryAllQuestion.push(question) 
-}
-const deleteQuestionToCategory = (categoryId,questionId) => {
-    const newcategoryquestionarr=[]
-    Category.findOne({_id: categoryId}).CategoryAllQuestion.forEach((question)=>{
-      if(question._id!=questionId)
-      newcategoryquestionarr.push(question)
-    })
-    return Category.findOne({_id: categoryId}).CategoryAllQuestion=newcategoryquestionarr
 
+const updateCategory = (categoryName, newContent) => {
+    return Category.findOneAndUpdate({categoryName}, newContent, {new:true})
 }
-
 
 module.exports = {
     getCategory,
     getAllCategorys,
-    getBulkCategorys,
     addCategory,
     removeCategory,
     removeAllCategorys,
     updateCategory,
-    getAllCategoryQuestions,
-    addQuestionToCategory,
-    deleteQuestionToCategory,
+    getAllObjectsWithSameAttribute,
 }

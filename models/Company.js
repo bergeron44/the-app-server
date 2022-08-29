@@ -1,27 +1,34 @@
 const mongoose= require("mongoose");
 const CompanySchema = new mongoose.Schema({
-companyname:{
+companyName:{
     type:String,
     required:true,
 },
-numberofplayers:{
+numberOfPlayers:{
     type:Number,
+    default:0
 },
 location:{
     type:String,
+    required:true
 },
-numberofgamemonth:{
+numberOfGamePerMonth:{
     type:Number,
+    default:0
 },
-numberofgameoverall:{
+numberOfGameOverAll:{
     type:Number,
+    default:0
 },
-qradvertisement:{
+qrAdvertisement:{
     type:Number,
+    default:0
 },
 prizes: [{
-        type: String
+        type: String,
+        default:0
     }]
+    
 })
 const Company = mongoose.model('Company', CompanySchema);
 module.exports = Company;

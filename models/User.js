@@ -1,20 +1,29 @@
 const mongoose= require("mongoose");
+
 const UserSchema = new mongoose.Schema({
-username:{
+userName:{
     type:String,
     required:true,
 },
-numberofgame:{
+numberOfGames:{
     type:Number,
+    default:0,
 },
-pointforgame:{
+pointForGame:{
     type:Number,
+    default:0,
 },
-pointallgames:{
+pointAllGames:{
     type:Number,
+    default:0,
 },
-currentgamecode:{
-type:String,
+code:{
+    type:Number,
+    default:0,
+},
+joinGame:{
+    type:Boolean,
+    default:false,
 },
 
 })

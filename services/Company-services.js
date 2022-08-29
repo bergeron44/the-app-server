@@ -3,6 +3,9 @@ const Company = require('../models/Company')
 const getCompany = (companyId) => {
     return Company.findOne({_id: companyId})
 }
+const getCompanyByName = (name) => {
+    return Company.findOne({companyName: name})
+}
 
 const getAllCompanys = () => {
     return Company.find({})
@@ -26,20 +29,10 @@ const removeAllCompanys = (companyListIds) => {
 const updateCompany = (companyId, newContent) => {
     return Company.findOneAndUpdate({_id:companyId}, newContent, {new:true})
 }
-const addPrizeToCompany = async (companyId,prize) => {
-    Company.findOne({_id: companyId})._prizes.push(prize);
-    return companyObject.save()
-}
-const deletePrizeToCompany = async (companyId,deletePrize) => {
-    const newarr=[]
-    for (const prize in Company.findOne({_id: companyId})._prizes) {
-        if (prize!=deletePrize) {
-            newarr.push(prize);            
-        }
-    }
+const getAllObjectsWithSameAttribute= (attribute,whatToCheck) => {
+    return Category.find({[attribute]: whatToCheck})
+}//not work
 
-    Company.findOne({_id: companyId})._prizes=newarr;
-}
 module.exports = {
     getCompany,
     getAllCompanys,
@@ -47,6 +40,6 @@ module.exports = {
     removeCompany,
     removeAllCompanys,
     updateCompany,
-    addPrizeToCompany,
-    deletePrizeToCompany,
+    getAllObjectsWithSameAttribute,
+    getCompanyByName
 }

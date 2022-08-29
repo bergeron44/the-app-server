@@ -7,10 +7,14 @@ const getSuggestion = (suggestionId) => {
 const getAllSuggestion = () => {
     return Suggestion.find({})
 }
+const getAllSuggestionByAttribute = (attribute,whatToLookFor) => {
+    return Suggestion.find({[attribute]:whatToLookFor})
+    
+}
 
 const getBulkSuggestions = (suggestionIdsList) => {
     const suggestionList = []
-    suggestionsIdsList.forEach(suggestionId => {
+    suggestionIdsList.forEach(suggestionId => {
         const q = Suggestion.findOne({_id: suggestionId})
         suggestionList.push(q)
     })
@@ -35,6 +39,11 @@ const removeAllSuggestions = (suggestionListIds) => {
 const updateSuggestion = (suggestionId, newContent) => {
     return Suggestion.findOneAndUpdate({_id:suggestionId}, newContent, {new:true})
 }
+const removeAllSuggestionWithSameAttribute = (attribute,whatToLookFor) => {
+    
+        return User.findAndRemove({[attribute]: whatToLookFor})
+    
+}
 
 module.exports = {
     getSuggestion,
@@ -44,4 +53,6 @@ module.exports = {
     removeSuggestion,
     removeAllSuggestions,
     updateSuggestion,
+    removeAllSuggestionWithSameAttribute,
+    getAllSuggestionByAttribute
 }

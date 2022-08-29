@@ -1,41 +1,27 @@
-const UserTable = require('../models/UserTable')
+const UserTable = require('../models/UsersTable')
 
 
-const getTableByName = (tableName) => {
-    return UserTable.findOne({_tableName: tableName})
+const getTableById = (tableId) => {
+    return UserTable.find({_id:tableId})
+     .populate('allUsers')
+     .populate('creator')
 }
 const getTableByCode = (tablecode) => {
-    return UserTable.findOne({_code: tablecode})
+    return UserTable.find({code: tablecode})
+    .populate('allUsers')
+    .populate('creator')
 }
-const getAllUsersFromTableName = (tableName) => {
-    return UserTable.find({_tableName: tableName}).allUsers
+const getAllTables = () => {
+    return UserTable.find()
+    .populate('allUsers')
+    .populate('creator')
 }
-const getAllUsersFromTableCode = (tablecode) => {
-    return UserTable.find({_code: tablecode}).allUsers
+const getAllUsersFromTableWithCode = (code) => {
+    return UserTable.find({code}).populatelate('allUsers')// .populate({path: table.allUsers, model:'User'}) // find out how to populate an array inside of an object
 }
-const getTableCode = (tableName) => {
-    return UserTable.find({_tableName: tableName}).code
+const getCreatorOfTableWithCode = (code) => {
+    return UserTable.find({code: code}).populate('creator')// .populate({path: table.allUsers, model:'User'}) // find out how to populate an array inside of an object
 }
-const getTableNameByCode = (tablecode) => {
-    return UserTable.find({_code: tablecode}).tableName
-}
-
-const getTopThreeBest = (tableName) => {
-    const userlist=[]
-    const bestuserList = []
-    const bestthree = []
-    UserTable.find({_tableName: tableName}).allUsers.forEach(User => {
-        const q = Question.findOne({_id: questionId})
-        userlist.push(q)
-    })
-
-    bestthree.push(bestuserList[2])
-    bestthree.push(bestuserList[1])
-    bestthree.push(bestuserList[0])
-
-
-    return bestthree
-}//לא מסווים
 
 const addTable = async (tableObject) => {
     tableObject = new UserTable(tableObject)
@@ -43,56 +29,41 @@ const addTable = async (tableObject) => {
 }
 
 const removeTableByCode = (tablecode) => {
-    return UserTable.findOneAndRemove({_code: tablecode})
+    return UserTable.findOneAndRemove({code: tablecode})
 }
-const removeTableByName = (tablename) => {
-    return UserTable.findOneAndRemove({_tableName: tablename})
+const removeTableById = (tableId) => {
+    return UserTable.findOneAndRemove({_id:tableId})
 }
 
 const removeAllTables = (tableListNames) => {
-    tableListIds.forEach(tablename => {
-        UserTable.findOneAndRemove({_tableName: tablename})
+    tableListNames.forEach(tableName => {
+        UserTable.findOneAndRemove({tableName})
     })
 }
-const removeUserByNameAndTableName = (UserName,tablename) => {
-    const newuserlist=[]
-    UserTable.find({_tableName: tablename})._allUsers.forEach(User => {
-        if(User._username!=UserName)
-        newuserlist.push(User)
-    })
-    return  UserTable.find({_tableName: tablename})._allUsers=newuserlist
+const updateTable= (tableCode, newContent) => {
+    return UserTable.findOneAndUpdate({code: tableCode},newContent , {new:true})
+    .populate('allUsers') 
+    .populate('creator')   
+}
+const sortAllUsersPoint= (tablecode) => {
+    return UserTable.findOne({code: tablecode})
+        .populate('allUsers') 
+        .sort((a,b) => a.pointforgame -b.pointforgame);
+      
+}//לא בשימוש
 
-}
-const removeUserByCodeAndName = (UserName,code) => {
-    const newuserlist=[]
-    UserTable.find({_code: code})._allUsers.forEach(User => {
-        if(User._username!=UserName)
-        newuserlist.push(User)
-    })
-    return  UserTable.find({_tableName: tablename})._allUsers=newuserlist
-
-}
-const updateTableUsers= (tablename, newUser) => {
-   return UserTable.find({_tableName: tablename})._allUsers.push(newUser)
-}
-const updateTableName = (tablecode, newtablename) => {
-    return UserTable.find({_code:tablecode})._tableName=newtablename
-}
 
 module.exports = {
-    getTableByName,
+    getTableById,
     getTableByCode,
-    getAllUsersFromTableName,
-    getAllUsersFromTableCode,
-    getTableCode,
-    getTableNameByCode,
-    getTopThreeBest,
+    getAllTables,
     addTable,
     removeTableByCode,
-    removeTableByName,
+    removeTableById,
     removeAllTables,
-    removeUserByNameAndTableName,
-    removeUserByCodeAndName,
-    updateTableUsers,
-    updateTableName,
+    updateTable,
+    getAllUsersFromTableWithCode,
+    getCreatorOfTableWithCode,
+    sortAllUsersPoint
+    
 }

@@ -2,10 +2,18 @@ const TheGame = require('../models/TheGame')
 
 const getTheGame = (theGameId) => {
     return TheGame.findOne({_id: theGameId})
+        .populate('location')
+        .populate('theGameQuestions')
+        .populate('winnersTable')
+        .populate({path:'table',populate:{path:'allUsers',path:'creator'}})
 }
 
 const getAllTheGames = () => {
     return TheGame.find({})
+    .populate('location')
+    .populate('theGameQuestions')
+    .populate('winnersTable')
+    .populate({path:'table',populate:{path:'allUsers'}})
 }
 
 const getBulkTheGames = (theGameListIds) => {
@@ -35,41 +43,29 @@ const removeAllTheGames = (theGameListIds) => {
 const updateTheGame = (theGameId, newContent) => {
     return TheGame.findOneAndUpdate({_id:theGameId}, newContent, {new:true})
 }
-const getTheGameSize = () => {
-    return TheGame.findOne({_id: theGameId})._gameDefintin
+const getTheGameCompany = (theGameId) => {
+    const game= TheGame.findOne({_id: theGameId})
+    return game.populate('location')
 }
-const getTheGameCompany = () => {
-    return TheGame.findOne({_id: theGameId})._location
+const getTheGameTable = (theGameId) => {
+    const game= TheGame.findOne({_id: theGameId})
+    return game.populate('table')
 }
-const getTheGameTable = () => {
-    return TheGame.findOne({_id: theGameId})._allUsersInTheTable
+const getTheGameQuestion = (theGameId) => {
+    const game= TheGame.findOne({_id: theGameId})
+    return game.populate('theGameQuestions')
 }
-const getTheGameQuestion = () => {
-    return TheGame.findOne({_id: theGameId})._theGameQuestion
+const getTheGameWinners = (theGameId) => {
+    const game= TheGame.findOne({_id: theGameId})
+    return game.populate('winnersTable')
 }
-const getTheGameWinnersTable = () => {
-    return TheGame.findOne({_id: theGameId})._winnersTable
+const getAllGamessWithSameattribute = (attribute,whatMatch) => {
+    return TheGame.find({[attribute]:whatMatch})
 }
-const getTheGamePrizes = () => {
-    return TheGame.findOne({_id: theGameId})._gamePrizes
-}
-const setTheGameSize = (newgamesize) => {
-     TheGame.findOne({_id: theGameId})._gameDefintin=newgamesize
-}
-const setTheGameCompany = (newgamecompany) => {
-     TheGame.findOne({_id: theGameId})._location=newgamecompany
-}
-const setTheGameTable = (newgametable) => {
-     TheGame.findOne({_id: theGameId})._allUsersInTheTable=newgametable
-}
-const setTheGameQuestions = (newGameQuestions) => {
-     TheGame.findOne({_id: theGameId})._theGameQuestion=newGameQuestions
-}
-const setTheGameWinnersTable = (newwinnersTable) => {
-     TheGame.findOne({_id: theGameId})._winnersTable=newwinnersTable
-}
-const setTheGamePrizes = (newgamePrizes) => {
-     TheGame.findOne({_id: theGameId})._gamePrizes=newgamePrizes
+const removeAllGamessWithSameAttribute = (attribute,whatMatch) => {
+    
+        return TheGame.findAndRemove({[attribute]: whatMatch})
+    
 }
 
 
@@ -81,16 +77,9 @@ module.exports = {
     removeTheGame,
     removeAllTheGames,
     updateTheGame,
-    getTheGameSize,
     getTheGameCompany,
     getTheGameTable,
     getTheGameQuestion,
-    getTheGameWinnersTable,
-    getTheGamePrizes,
-    setTheGameSize,
-    setTheGameCompany,
-    setTheGameTable,
-    setTheGameQuestions,
-    setTheGameWinnersTable,
-    setTheGamePrizes,
+    getAllGamessWithSameattribute,
+    removeAllGamessWithSameAttribute,
 }

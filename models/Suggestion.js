@@ -1,6 +1,6 @@
 const mongoose= require("mongoose");
 const SuggestionSchema = new mongoose.Schema({
-title:{
+answer:{
     type:String,
     required:true,
 },

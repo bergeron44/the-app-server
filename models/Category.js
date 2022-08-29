@@ -1,19 +1,15 @@
 const mongoose= require("mongoose");
-const Question= require("./Question")
 
 const CategorySchema = new mongoose.Schema({
-CategoryName:{
+categoryName:{
     type:String,
     required:true,
 },
-CategoryNumOfQuestion:{
+categoryNumOfQuestion:{
     type:Number,
+    default:0,
 },
-CategoryAllQuestion: [{
-        type:mongoose.Types.ObjectId,
-        ref: 'Question',
-    }]
-,
+
 
 })
 const Category = mongoose.model('Category', CategorySchema);

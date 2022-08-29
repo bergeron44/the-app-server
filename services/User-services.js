@@ -10,8 +10,8 @@ const getAllUsers = () => {
 
 const getBulkUsers = (usersIdsList) => {
     const usersList = []
-    usersIdsList.forEach(questionId => {
-        const q = Question.findOne({_id: questionId})
+    usersIdsList.forEach(UserId => {
+        const q = User.findOne({_id: UserId})
         usersList.push(q)
     })
     return usersList
@@ -26,14 +26,23 @@ const removeUser = (userId) => {
     return User.findOneAndRemove({_id: userId})
 }
 
-const removeAllUsers = (UserListIds) => {
+const removeBulkUsers = (UserListIds) => {
     UserListIds.forEach(userId => {
         User.findOneAndRemove({_id: userId})
     })
-}
 
+}
+const getAllUsersWithSameAttribute = (attribute,whatMatch) => {
+    return User.find({[attribute]:whatMatch})
+}
+const getAllUsersWithSameCode = (whatMatch) => {
+    return User.find({code:whatMatch})
+}
+const removeAllUsersWithSameAttribute =(attribute,whatMatch) => {
+    return User.findOneAndRemove({[attribute]:whatMatch})
+}
 const updateUser = (userId, newContent) => {
-    return Question.findOneAndUpdate({_id:userId}, newContent, {new:true})
+    return User.findOneAndUpdate({_id:userId}, newContent, {new:true})
 }
 
 module.exports = {
@@ -42,6 +51,9 @@ module.exports = {
     getBulkUsers,
     addUser,
     removeUser,
-    removeAllUsers,
+    removeBulkUsers,
     updateUser,
+    getAllUsersWithSameAttribute,
+    removeAllUsersWithSameAttribute,
+    getAllUsersWithSameCode,
 }

@@ -1,38 +1,49 @@
 const mongoose= require("mongoose");
 const Company = require("./Company");
-const GameSize = require("./GameSize");
-const Category= require("./Category")
-const UsersTable= require("./UsersTable")
+const Question= require("./Question");
+const UsersTable= require("./UsersTable");
 const TheGameSchema = new mongoose.Schema({
- location:{
+location:{
         type:mongoose.Types.ObjectId,
         ref: 'Company',
         required: true,
     },
-allUsersInTheTable:[{
+table:{
         type:mongoose.Types.ObjectId,
         ref: 'UsersTable',
-}],
+},
     //מערך של יוזרים עם קוד זהה
-theGameQuestion:[{
+theGameQuestions:[{
         type:mongoose.Types.ObjectId,
-        ref: '\Question',
+        ref: 'Question',
     }],
     //מערך מקאטגורי של שאלות ליבא לפה
-gameDefintin:{
-    
-    type:mongoose.Types.ObjectId,
-    ref: 'GameSize',
-    required: true
-
+gameSize:{
+    size:{
+        type:String,
+        enum:["SHORT","MEDIUM","LONG","UNLIMITED"],
+        default:"MEDIUM" ,
+    },
+    price:{
+        type:Number,
+        enum:[60,90,120,200],
+        default:60 ,
+    },
+    numberOfQuestion:{
+        type:Number,
+        enum:[10,15,25,100],
+        default:10 ,
+    }
 },
 winnersTable:[{
     type:mongoose.Types.ObjectId,
     ref: 'User',
 }],
-gamePrizes:[{
-    type:String,
-}],
+gameStart:{
+    type:Boolean,
+    default:false,
+}
+
 })
 const TheGame = mongoose.model('TheGame', TheGameSchema);
 

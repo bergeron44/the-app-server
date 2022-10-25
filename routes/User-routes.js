@@ -8,11 +8,13 @@ const {
     getAllUsersWithMatchCodeCont,
     setCurrentGameCodeCont,
     addToGameNumberOfPointCont,
+    getUserByNameCont
 } = require('../controllers/User-controller')
 
 module.exports = function (app) {
     app
         .get('/api/user/:userId', getUserCont)
+        .get('/api/user/name/:userName', getUserByNameCont)
         .get('/api/users', getAllUserCont)
         .get('/api/users/code/:code', getAllUsersWithMatchCodeCont)
         .post('/api/user/create', createUserCont)

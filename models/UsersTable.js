@@ -3,8 +3,7 @@ const User = require("./User");
 const UsersTableSchema = new mongoose.Schema({
 tableName:{
         type:String,
-        default:"no name",
-        unique: true,
+        default:"no name "+Math.floor(Math.random() * 100000 ),
 },
 code:{
     type:Number,
@@ -14,7 +13,6 @@ allUsers:[{
     type:mongoose.Types.ObjectId,
     ref: 'User',
 }],
-
 creator:{
     type:mongoose.Types.ObjectId,
     ref:'User',

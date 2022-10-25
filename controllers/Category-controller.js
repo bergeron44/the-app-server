@@ -5,7 +5,9 @@ const {
     addCategory,
     removeCategory,
     removeAllCategorys,
-    updateCategory
+    updateCategory,
+    getCategoryId,
+    updateCategoryById
 } = require('../services/Category-services')
 const serverResponse = require('../utils/serverResponse')
 
@@ -49,10 +51,10 @@ const createCategoryCont = async (req, res) => {
                 if(!newcategory){
                     return serverResponse(res, 404, { message: "no capble to add new category"})
                 }
-                return serverResponse(res, 200,{ message: " the category : "+newcategory.categoryName+" was add seccefuly exsist"})
+                return serverResponse(res, 200,newcategory)
            }
 
-        return serverResponse(res, 404, { message: "no capble to add new category becose the category : "+category.categoryName+" exsist"})
+        return serverResponse(res, 200, category)
     } catch(e){
         console.log(e)
         return serverResponse(res, 500, {message: 'internal error occured while trying to add category'})
@@ -76,6 +78,24 @@ const editCategoryCont = async (req, res) => {
         return serverResponse(res, 500, {message: 'internal error occured while trying to update category'})
     }
 }
+const editCategoryByIdCont = async (req, res) => {
+    try{
+        const oldcategory= await getCategoryId(req.params.categoryId)
+        if(!oldcategory){
+            return serverResponse(res, 400, { message: "no category found"})
+        }
+        const newcate={...req.body};
+        const newcategory = await updateCategoryById(oldcategory._id,newcate);
+        if(!newcategory){
+            return serverResponse(res, 400, { message: "no able to update category "+req.params.categoryName+" with new name :  "+newcate.categoryName})
+        }
+
+        return serverResponse(res, 200, newcategory)
+    } catch(e){
+        console.log(e)
+        return serverResponse(res, 500, {message: 'internal error occured while trying to update category'})
+    }
+}
 const getAllCategoryNamesCont = async (req, res) => {
     try{
         const allCategories = await getAllCategorys()
@@ -86,6 +106,20 @@ const getAllCategoryNamesCont = async (req, res) => {
         }
 
         return serverResponse(res, 200, arr)
+    } catch(e){
+        console.log(e)
+        return serverResponse(res, 500, {message: 'internal error occured while trying to get all names from categorys'})
+    }
+}
+const getAllCategorysCont = async (req, res) => {
+    try{
+        const allCategories = await getAllCategorys()
+       
+        if(!allCategories){
+            return serverResponse(res, 404, { message: "no capble to get all category's"})
+        }
+
+        return serverResponse(res, 200, allCategories)
     } catch(e){
         console.log(e)
         return serverResponse(res, 500, {message: 'internal error occured while trying to get all names from categorys'})
@@ -135,7 +169,9 @@ module.exports = {
     deleteCategoryCont,
     createCategoryCont,
     editCategoryCont,
+    getAllCategorysCont,
     getAllCategoryNamesCont,
     getAllCategoryNumOfGamesCont,
-    getNumCategorysThetNumQuestionBelowfifthyCont
+    getNumCategorysThetNumQuestionBelowfifthyCont,
+    editCategoryByIdCont
 }

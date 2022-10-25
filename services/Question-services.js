@@ -38,12 +38,14 @@ const updateQuestion = (questionId, newContent) => {
 }
 
 const getAllObjectsWithSameAttribute= (attribute,whatToCheck) => {
-   return Category.find({[attribute]: whatToCheck})
+   return Question.find({[attribute]: whatToCheck})
 }//get an attribute and bring baeck all the objects with the same attribute
+const getAllQuestionsWithSameCategory= (category) => {
+    return Question.find({category:category})
+ }
 
-
-const getNumObjectsWithSameAttribute= (attribute,whatToCheck,num) => {
-    return Category.aggregate([{$match:{[attribute]:whatToCheck}},{$sample:{size:num}}])
+const getNumObjectsWithSameAttribute= (whatToCheck,num) => {
+    return Question.aggregate([{$match:{Category:whatToCheck}},{$sample:{size:num}}])
    // return Category.find({[attribute]: whattocheck}).limit(num)
 }//get an attribute and bring baeck random num of objects with the same attribute
 
@@ -58,5 +60,6 @@ module.exports = {
     removeAllQuestions,
     updateQuestion,
     getAllObjectsWithSameAttribute,
-    getNumObjectsWithSameAttribute
+    getNumObjectsWithSameAttribute,
+    getAllQuestionsWithSameCategory
 }

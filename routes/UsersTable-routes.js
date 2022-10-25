@@ -7,7 +7,8 @@ const
     deleteTableCont,
     getTopThreeCont,
     getTableIdCont,
-    getAllTablesCont
+    getAllTablesCont,
+    getTheWinnerCont
 } = require('../controllers/UsersTable-controller')
 
 module.exports = function (app) {
@@ -16,6 +17,7 @@ module.exports = function (app) {
         .get('/api/table/id/:tableId', getTableIdCont)
         .get('/api/tables', getAllTablesCont)
         .get('/api/table/:code/top', getTopThreeCont)
+        .get('/api/table/:code/winner', getTheWinnerCont)
         .post('/api/table/create', createTableCont)
         .post('/api/table/:code/edit', editTableCont)
         .post('/api/table/:code/:userId/enterGame', enterTableCont)

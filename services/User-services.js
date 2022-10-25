@@ -3,6 +3,9 @@ const User = require('../models/User')
 const getUser = (userId) => {
     return User.findOne({_id: userId})
 }
+const getUserByName = (userName) => {
+    return User.findOne({userName: userName})
+}
 
 const getAllUsers = () => {
     return User.find({})
@@ -47,6 +50,7 @@ const updateUser = (userId, newContent) => {
 
 module.exports = {
     getUser,
+    getUserByName,
     getAllUsers,
     getBulkUsers,
     addUser,

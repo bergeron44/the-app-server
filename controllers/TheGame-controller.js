@@ -132,12 +132,19 @@
                 return serverResponse(res, 404, { message: "no Game found"})
             }
             const gameTable=theGame.table
-            const sortedUsersPoint = sortAllUsersPoint(gameTable.code)
+            const sortedUsersPoint =await sortAllUsersPoint(gameTable.code)
+             if(sortAllUsersPoint.length>=3)
+             {
             const topThree=[sortedUsersPoint[0],sortedUsersPoint[1],sortedUsersPoint[2]];
             theGame.winnersTable=topThree;
+             }
+             else
+             {
+                return serverResponse(res, 404, { message: "there is less the 3 players "})
+             }
           //option   theGame.table.allUsers=sortedUsersPoint
             const newGame=updateTheGame(req.params.theGameId,theGame);
-            if(!newgame){
+            if(!newGame){
                 return serverResponse(res, 404, { message: "no able to update winners table "})
             }
             return serverResponse(res, 200, newGame)
@@ -152,16 +159,19 @@
             if(!theGame){
                 return serverResponse(res, 404, { message: "no Game found"})
             }
-            theGame.table=req.body.table;
-            theGame.location=req.body.company;
-            theGame.theGameQuestions=req.body.questions;
-            theGame.gameSize=req.body.questions;
-            theGame.winnersTable=[theGame.table.allUsers[0],theGame.table.allUsers[1],theGame.table.allUsers[2]]
+            let i=0;
+            theGame.table.allUsers.forEach(user =>{
+                if(i<3)
+                {
+                    theGame.winnersTable.push(user)
+                    i++;
+                }
+            })
             theGame.gameStart=true;
 
           //option   theGame.table.allUsers=sortedUsersPoint
             const newGame=updateTheGame(req.params.theGameId,theGame);
-            if(!newgame){
+            if(!newGame){
                 return serverResponse(res, 404, { message: "no able to update winners table "})
             }
             return serverResponse(res, 200, newGame)
@@ -194,7 +204,7 @@
                 return serverResponse(res, 404, { message: "no Game found"})
             }
     
-            return serverResponse(res, 200,{message: 'TheGame delete secssesfuly --:-- :'+thegame})
+            return serverResponse(res, 200,{message: 'TheGame delete secssesfuly'})
         } catch(e){
             console.log(e)
             return serverResponse(res, 500, {message: 'internal error occured while trying to delete TheGame'})
@@ -231,4 +241,5 @@
         updateSizeforTheGameCont,
         deleteTheGameCont,
         createNewGameCont,
+        startTheGameCont
     }

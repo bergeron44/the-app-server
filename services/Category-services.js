@@ -5,6 +5,10 @@ const getCategory= (categoryName) => {
     return Category.findOne({categoryName})
 
 }
+const getCategoryId= (categoryId) => {
+    return Category.findOne({_id:categoryId})
+
+}
 const getAllObjectsWithSameAttribute= (attribute, whatToCheck) => {
     return Category.find({[attribute]: whatToCheck})
 }//get an attribute and bring baeck all the objects with the same attribute
@@ -32,6 +36,9 @@ const removeAllCategorys = (categoryListNames) => {
 const updateCategory = (categoryName, newContent) => {
     return Category.findOneAndUpdate({categoryName}, newContent, {new:true})
 }
+const updateCategoryById = (categoryId, newContent) => {
+    return Category.findOneAndUpdate({_id:categoryId}, newContent, {new:true})
+}
 
 module.exports = {
     getCategory,
@@ -41,4 +48,6 @@ module.exports = {
     removeAllCategorys,
     updateCategory,
     getAllObjectsWithSameAttribute,
+    getCategoryId,
+    updateCategoryById
 }

@@ -8,7 +8,8 @@ const {
     removeBulkUsers,
     updateUser,
     getAllUsersWithSameAttribute,
-    getAllUsersWithSameCode
+    getAllUsersWithSameCode,
+    getUserByName
 } = require('../services/User-services')
 const serverResponse = require('../utils/serverResponse')
 
@@ -31,16 +32,42 @@ const getUserCont = async (req, res) => {
         return serverResponse(res, 500, {message: 'internal error occured while trying to get User'})
     }
 }
+const getUserByNameCont= async (req, res) =>{
+    try{
+        const user = await getUserByName(req.params.userName)
+    
+        if(!user){
+            return serverResponse(res, 404, { message: "no User found"})
+        }
+        const username=user.userName;
+        const usernumofpointoverall=user.pointAllGames;
+        const usernumberofgame=user.numberOfGames;
+        const usercode=user.code;
+
+
+        return serverResponse(res, 200, user)
+    } catch(e){
+        console.log(e)
+        return serverResponse(res, 500, {message: 'internal error occured while trying to get User'})
+    }
+}
 const createUserCont = async (req, res) => {
     try{
-        const user={...req.body}
-        const newUser = await addUser(user)
+        // const user = await getUserByName(req.body.userName)
+        // if(!user){
+          const  userBody={...req.body}
+        const newUser = await addUser(userBody)
 
         if(!newUser){
             return serverResponse(res, 404, { message: "no capble to add newUser"})
         }
-
         return serverResponse(res, 200, newUser)
+        // }
+        // else
+        // {
+        //     return serverResponse(res, 200, user)
+        // }
+       
     } catch(e){
         console.log(e)
         return serverResponse(res, 500, {message: 'internal error occured while trying to set new user'})
@@ -168,4 +195,5 @@ module.exports = {
     getAllUsersWithMatchCodeCont,
     setCurrentGameCodeCont,
     addToGameNumberOfPointCont,
+    getUserByNameCont
 }

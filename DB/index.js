@@ -2,18 +2,13 @@ const mongoose = require('mongoose');
 const express = require('express');
 //הוספתי
 const app= express()
-const userName="ronberger"
-const password="8263867rui"
-const cluster="clusterForGame"
-const dbName="user"
 
 app.use(express.json);
 app.use(express());
 
 //const mongoUri="mongodb+srv://"+userName+":"+password+"@"+cluster+".xfxcrfk.mongodb.net/?retryWrites=true&w=majority"
 const mongoUri="mongodb+srv://ronberger:8263867rui@clusterforgame.xfxcrfk.mongodb.net/?retryWrites=true&w=majority"
-//סיום הוספה
-//const mongoUri = 'mongodb://localhost:27017/realproject'
+
 
 module.exports = async function connect() {
   require('../models/UsersTable');

@@ -9,6 +9,7 @@ const {
     updateTheGameCont,
     deleteTheGameCont,
     createNewGameCont,
+    startTheGameCont
 
 } = require('../controllers/TheGame-controller')
 const {
@@ -22,6 +23,7 @@ module.exports = function (app){
         .post('/api/game/:theGameId/update', updateTheGameCont)
         .post('/api/game/:theGameId/gameSize/update', updateSizeforTheGameCont)
         .post('/api/game/create', createNewGameCont)
+        .post('/api/game/:theGameId/start', startTheGameCont)
         .delete('/api/game/:theGameId/delete', deleteTheGameCont)
         .post('/api/game/:theGameId/endGame', endGameCont)
         

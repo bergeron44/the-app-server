@@ -1,10 +1,18 @@
+// const { NODE_ENV } = process.env;
+// //if node_env is not production
+// if (!NODE_ENV || NODE_ENV === "development") {
+//   require('dotenv').config();
+// }
+
 const express = require('express');
+const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const path = require('path');
 const connect = require('./db');
 const portNum=3001;
 const app = express();
+
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -13,6 +21,24 @@ app.use(
     extended: true
   })
 );
+app.use(cors());
+
+// app.use('/health', async (_req, res, _next) => {
+
+//   const healthcheck = {
+//       uptime: process.uptime(),
+//       message: 'OK',
+//       timestamp: Date.now()
+//   };
+//   try {
+//       res.send(healthcheck);
+//   } catch (error) {
+//       healthcheck.message = error;
+//       res.status(204).send();
+//   }
+
+//   // res.status(204).send();
+// });
 
 require('./routes/index')(app);
 
@@ -20,6 +46,7 @@ connect().then(() => {
   console.log('DB is connected');
   app.listen(portNum, () => {
     console.log('Server is up with express on port: ', portNum);
+    //console.log(process.env.NODE_ENV)
   });
 });
 //http://localhost:3001

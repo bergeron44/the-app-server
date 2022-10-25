@@ -5,6 +5,10 @@ userName:{
     type:String,
     required:true,
 },
+barName:{
+    type:String,
+    required:true,
+},
 numberOfGames:{
     type:Number,
     default:0,
@@ -25,6 +29,7 @@ joinGame:{
     type:Boolean,
     default:false,
 },
+
 
 })
 const User = mongoose.model('User', UserSchema);

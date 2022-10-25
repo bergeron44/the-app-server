@@ -7,7 +7,8 @@ const {
     removeAllQuestions,
     updateQuestion,
     getAllObjectsWithSameAttribute,
-    getNumObjectsWithSameAttribute
+    getNumObjectsWithSameAttribute,
+    getAllQuestionsWithSameCategory
 
 } = require('../services/Question-services')
 const {getCategory,addCategory, updateCategory} = require('../services/Category-services')
@@ -124,14 +125,14 @@ const editQustionCont = async (req, res) => {
   };
   const getNumQuestionWithSameCtegoryCont = async (req, res) => {
     try{
-        const numofqustionwithsamecategoru = await getNumObjectsWithSameAttribute(category, req.params.categoryName, req.params.numOfQuestion)
+        const numofqustionwithsamecategory = await getNumObjectsWithSameAttribute(req.params.categoryName, req.params.numOfQuestion)
 
-        if(!allquestionfromsamecategory){
+        if(!numofqustionwithsamecategory){
             return serverResponse(res, 404, { message: "no able to get random question from thet category"})
         }
 
 
-        return serverResponse(res, 200, numofqustionwithsamecategoru)
+        return serverResponse(res, 200, numofqustionwithsamecategory)
     } catch(e){
         console.log(e)
         return serverResponse(res, 500, {message: 'internal error occured while trying to get Questions from same category random'})
@@ -168,6 +169,20 @@ const checkAnswer = async (req, res) => {
       return serverResponse(res, 500, {message: 'internal error occured while trying to get Questions from same category random'})
   }
 }
+const getQuestionsWithSameCategoryCont =async(req, res)=>{
+  try{
+    const allQuestionWithSameCategory = await getAllQuestionsWithSameCategory(req.params.categoryName)
+
+    if(!allQuestionWithSameCategory){
+        return serverResponse(res, 404, { message: "no questions in thet category found"})
+    }
+
+    return serverResponse(res, 200, allQuestionWithSameCategory)
+} catch(e){
+    console.log(e)
+    return serverResponse(res, 500, {message: 'internal error occured while trying to get all Questions'})
+}
+}
 
 
 
@@ -179,5 +194,6 @@ module.exports = {
     newQuestionCont,
     deleteQuestionCont,
     getNumQuestionWithSameCtegoryCont,
-    checkAnswer
+    checkAnswer,
+    getQuestionsWithSameCategoryCont
 }

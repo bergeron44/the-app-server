@@ -1,7 +1,7 @@
 const { NODE_ENV } = process.env;
 //if node_env is not production
 if (!NODE_ENV || NODE_ENV === "development") {
-  require('dotenv').config();
+  require('dotenv').config(); 
 }
 
 const express = require('express');

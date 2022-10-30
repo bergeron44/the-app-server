@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const express = require('express');
 //הוספתי
 const app= express()
+  
+app.use(express.json); 
 
-app.use(express.json);
 app.use(express());
 
 //const mongoUri="mongodb+srv://"+userName+":"+password+"@"+cluster+".xfxcrfk.mongodb.net/?retryWrites=true&w=majority"

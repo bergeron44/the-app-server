@@ -9,7 +9,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const path = require('path');
-const connect = require('./db');
+const connect = require('./Db');
 const PORT = process.env.PORT || 3001;
 const app = express(); 
  

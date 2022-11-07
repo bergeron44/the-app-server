@@ -9,7 +9,7 @@ app.use(express());
 
 //const mongoUri="mongodb+srv://"+userName+":"+password+"@"+cluster+".xfxcrfk.mongodb.net/?retryWrites=true&w=majority"
 // const mongoUri="mongodb+srv://ronberger:8263867rui@clusterforgame.xfxcrfk.mongodb.net/?retryWrites=true&w=majority"
-const mongoUri = process.env.MONGO_URI;
+const mongoUri = "mongodb+srv://ronberger:8263867rui@clusterforgame.xfxcrfk.mongodb.net/?retryWrites=true&w=majority";
 
 module.exports = async function connect() {
   require('../models/UsersTable');

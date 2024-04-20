@@ -19,6 +19,9 @@ module.exports = async function connect() {
   require('../models/Question');
   require('../models/Company');
   require('../models/Category');
+  require('../models/DailyStatistic');
+  require('../models/Packages');
+  require('../models/Bars');
 //כל מודל שאני מכין צריך להיות מיובא לפה
   try {
     return mongoose.connect(mongoUri, {

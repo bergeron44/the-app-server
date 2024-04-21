@@ -1,7 +1,7 @@
 const package = require('../models/Packages')
 
-const getPackageByPrice= (packageName) => {
-    return package.findOne({packageName})
+const getPackageByPrice= (packagePrice) => {
+    return package.findOne({packagePrice})
 
 }
 const getPackageId= (packageId) => {
@@ -17,9 +17,6 @@ const addPackages =(packageObject) =>{
     return package.save()
 }
 
-const removePackageByName = (packageName) => {
-    return package.findOneAndRemove({packageName})
-}
 const removePackageById = (packageId) => {
     return package.findOneAndRemove({ _id: ObjectId(packageId) })
 }
@@ -39,7 +36,6 @@ module.exports = {
     getPackageId,
     getAllPackages,
     addPackages,
-    removePackageByName,
     removePackageById,
     removeAllPackagesFromList,
     updatePackageById,

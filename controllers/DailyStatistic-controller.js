@@ -8,7 +8,7 @@ const {
     updateCategory,
     getCategoryId,
     updateCategoryById
-} = require('../services/Category-services')
+} = require('../services/DailyStatistic-services')
 const serverResponse = require('../utils/serverResponse')
 
 const getCategoryCont = async (req, res) => {

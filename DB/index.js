@@ -12,13 +12,7 @@ app.use(express());
 const mongoUri = "mongodb+srv://ronberger:8263867rui@clusterforgame.xfxcrfk.mongodb.net/?retryWrites=true&w=majority";
 
 module.exports = async function connect() {
-  require('../models/UsersTable');
-  require('../models/User');
-  require('../models/TheGame');
-  require('../models/Suggestion');
-  require('../models/Question');
-  require('../models/Company');
-  require('../models/Category');
+  require('../models/Questions');
   require('../models/DailyStatistic');
   require('../models/Packages');
   require('../models/Bars');

@@ -1,24 +1,22 @@
 const {
-    getCategoryCont,
-    deleteCategoryCont,
-    createCategoryCont,
-    editCategoryCont,
-    getAllCategorysCont,
-    getAllCategoryNamesCont,
-    getAllCategoryNumOfGamesCont,
-    getNumCategorysThetNumQuestionBelowfifthyCont,
-    editCategoryByIdCont
-} = require('../controllers/Category-controller')
+    getBarByNameCont,
+    getBarByIdCont,
+    deleteBarByNameCont,
+    createBarCont,
+    editBarCont,
+    getAllBarsNamesCont,
+    getAllBarssCont,
+} = require('../controllers/Bars-controller')
 
 module.exports = function (app) {
     app
-        .get('/api/category/:categoryName', getCategoryCont)
-        .get('/api/categorys', getAllCategorysCont)
-        .get('/api/categorys/numOfGames', getAllCategoryNumOfGamesCont)
-        .get('/api/categorys/under50', getNumCategorysThetNumQuestionBelowfifthyCont)
-        .post('/api/category/:categoryName/edit/name',editCategoryCont)
-        .post('/api/category/:categoryId/edit',editCategoryByIdCont)
-        .post('/api/category/create',createCategoryCont)
-        .delete('/api/category/:categoryName/delete',deleteCategoryCont)
+        .get('/api/bar/:barName', getBarByNameCont)
+        .get('/api/bars', getAllBarssCont)
+        .get('/api/bar/:barId', getBarByIdCont)
+        .get('/api/bars/names', getAllBarsNamesCont)
+        .post('/api/bar/:barName/edit/name',editBarCont)
+        .post('/api/bar/:barId/edit',editBarCont)
+        .post('/api/bar/create',createBarCont)
+        .delete('/api/bar/:barName/delete',deleteBarByNameCont)
         
 }

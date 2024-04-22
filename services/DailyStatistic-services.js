@@ -2,7 +2,9 @@ const DailyStatistic = require('../models/DailyStatistic')
 
 
 //get line from data base by some attribute
-
+const getDailyStatistic = (day,bar,package) => {
+    return DailyStatistic.findOne({ day:day, bar:bar , package:package });
+}
 const getDailyStatisticByDay = (day) => {
     return DailyStatistic.findOne({ day: day });
 }
@@ -25,7 +27,9 @@ const getDailyStatisticByQuantity= (quantity) => {
 //end
 //get line from data base by some attribute
 //end
-
+const removeSpacificDailyStatistic=(day,bar,package)=> {
+return DailyStatistic.findOneAndRemove({day:day, bar:bar , package:package});
+}
 
 //get all row withe specific attribute
 const getAllDailyStatisticsWithSameAttribute = (attribute, whatToCheck) => {
@@ -66,6 +70,9 @@ const updateDailyStatisticById = (DailyStatisticId, newContent) => {
 }
 
 module.exports = {
+    getDailyStatistic,
+    removeSpacificDailyStatistic,
+    
     getDailyStatisticByDay,
     getDailyStatisticByBar,
     getDailyStatisticByDate,

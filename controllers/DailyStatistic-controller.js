@@ -1,177 +1,129 @@
 const {
-    getCategory,
-    getAllObjectsWithSameAttribute,
-    getAllCategorys,
-    addCategory,
-    removeCategory,
-    removeAllCategorys,
-    updateCategory,
-    getCategoryId,
-    updateCategoryById
+    getAllDailyStatistics,
+    getAllDailyStatisticsWithSameAttribute,
+    getDailyStatisticByBar,
+    getDailyStatisticByDate,
+    getDailyStatisticByDay,
+    getDailyStatisticByPackage,
+    getDailyStatisticByQuantity,
+    updateDailyStatistic,
+    updateDailyStatisticById,
+    removeDailyStatisticsByAttribute,
+    removeSpacificDailyStatistic,
+    addDailyStatistic,
+    getDailyStatistic,
 } = require('../services/DailyStatistic-services')
 const serverResponse = require('../utils/serverResponse')
 
-const getCategoryCont = async (req, res) => {
+const getDailyStatisticCont = async (req, res) => {
     try{
-        const category = await getCategory(req.params.categoryName)
-        const {categoryName, categoryNumOfQuestion} = category
-        if(!category){
-            return serverResponse(res, 404, { message: "no category found"})
+        const DailyStatistic = await getDailyStatistic(req.params.day,req.params.bar,req.params.package)
+        const {day, bar,package,date,quantity,rebuy} = DailyStatistic
+        if(!DailyStatistic){
+            return serverResponse(res, 404, { message: "no daily statistic found"})
         }
-        return serverResponse(res, 200, {categoryName, categoryNumOfQuestion})
+        return serverResponse(res, 200, {day, bar,package,date,quantity,rebuy})
     } catch(e){
         console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to get Category'})
+        return serverResponse(res, 500, {message: 'internal error occured while trying to get this statistic '})
     }
 }
-const deleteCategoryCont = async (req, res) => {
+const deleteDailyStatisticCont = async (req, res) => {
     try{
-        const Category = await removeCategory(req.params.categoryName)
+        const DailyStatistic = await removeSpacificDailyStatistic(eq.params.day,req.params.bar,req.params.package)
 
-        if(!Category){
-            return serverResponse(res, 404, { message: "the category dosent exsist"})
+        if(!DailyStatistic){
+            return serverResponse(res, 404, { message: "the DailyStatistic dosent exsist"})
         }
 
-        return serverResponse(res, 200,  { message: "category remove seccesfully"})
+        return serverResponse(res, 200,  { message: "DailyStatistic remove seccesfully"})
     } catch(e){
         console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to remove caegory'})
+        return serverResponse(res, 500, {message: 'internal error occured while trying to remove DailyStatistic'})
     }
 }
-const createCategoryCont = async (req, res) => {
+const createDailyStatisticCont = async (req, res) => {
     try{
-        const newcate = {...req.body}
-            if(newcate.categoryName==""){
-             return serverResponse(res, 404, { message: "no capble to add new category becose you put no name"})
+        const newDailyStatistic= {...req.body}
+            if((newDailyStatistic.bar=={})||(newDailyStatistic.day=="")||(newDailyStatistic.package=={})){
+             return serverResponse(res, 404, { message: "no capble to add new category becose you dont fill all parameters"})
         }
-        const categoryName=newcate.categoryName
-        const category = await getCategory(categoryName)
-             if(!category){
-                const newcategory = await addCategory(newcate)
-                if(!newcategory){
-                    return serverResponse(res, 404, { message: "no capble to add new category"})
+        const oldDailyStatistic = await getDailyStatistic(req.params.day,req.params.bar,req.params.package)
+             if(!oldDailyStatistic){
+                const dailyStatistic = await addDailyStatistic(newDailyStatistic)
+                if(!newDailyStatistic){
+                    return serverResponse(res, 404, { message: "no capble to add new Daily Statistic"})
                 }
                 return serverResponse(res, 200,newcategory)
            }
+           else
+           {
+            const dailyStatistic=await updateDailyStatisticById(oldDailyStatistic._id,{quantity:oldDailyStatistic.quantity+1})
+           }
 
-        return serverResponse(res, 200, category)
+        return serverResponse(res, 200, dailyStatistic)
     } catch(e){
         console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to add category'})
+        return serverResponse(res, 500, {message: 'internal error occured while trying to add this dailyStat'})
     }
 }
-const editCategoryCont = async (req, res) => {
+const editdailyStatisticCont = async (req, res) => {
     try{
-        const oldcategory= await getCategory(req.params.categoryName)
-        if(!oldcategory){
-            return serverResponse(res, 400, { message: "no category found"})
+        const DailyStatistic = await getDailyStatistic(req.params.day,req.params.bar,req.params.package)
+
+        if(!DailyStatistic){
+            return serverResponse(res, 400, { message: "no Daily Statistic found"})
         }
-        const newcate={...req.body};
-        const newcategory = await updateCategory(oldcategory.categoryName,newcate);
-        if(!newcategory){
-            return serverResponse(res, 400, { message: "no able to update category "+req.params.categoryName+" with new name :  "+newcate.categoryName})
+        const newDailyStatistic={...req.body};
+        const updatedDailyStatistic = await updateDailyStatistic(DailyStatistic._id,newDailyStatistic);
+        if(!updatedDailyStatistic){
+            return serverResponse(res, 400, { message: "update sucsesfuly dDaily Statistic"})
         }
 
-        return serverResponse(res, 200, newcategory)
+        return serverResponse(res, 200, updatedDailyStatistic)
     } catch(e){
         console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to update category'})
+        return serverResponse(res, 500, {message: 'internal error occured while trying to update Daily Statistic'})
     }
 }
-const editCategoryByIdCont = async (req, res) => {
+//not needed we can just get them all and in the front dill with thet
+const getAllDailyStatisticPackagesCont = async (req, res) => {
     try{
-        const oldcategory= await getCategoryId(req.params.categoryId)
-        if(!oldcategory){
-            return serverResponse(res, 400, { message: "no category found"})
-        }
-        const newcate={...req.body};
-        const newcategory = await updateCategoryById(oldcategory._id,newcate);
-        if(!newcategory){
-            return serverResponse(res, 400, { message: "no able to update category "+req.params.categoryName+" with new name :  "+newcate.categoryName})
-        }
-
-        return serverResponse(res, 200, newcategory)
-    } catch(e){
-        console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to update category'})
-    }
-}
-const getAllCategoryNamesCont = async (req, res) => {
-    try{
-        const allCategories = await getAllCategorys()
+        const allDailyStatistic = await getAllDailyStatistics()
         const arr=[]
-        allCategories.forEach(({categoryName}) =>{arr.push(categoryName)})
-        if(!allCategories){
-            return serverResponse(res, 404, { message: "no capble to get all category's"})
+        allDailyStatistic.forEach(({package}) =>{arr.push(package)})
+        if(!allDailyStatistic){
+            return serverResponse(res, 404, { message: "no capble to get all Daily Statistic's"})
         }
 
         return serverResponse(res, 200, arr)
     } catch(e){
         console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to get all names from categorys'})
+        return serverResponse(res, 500, {message: 'internal error occured while trying to get all names from Daily Statistic'})
     }
 }
-const getAllCategorysCont = async (req, res) => {
+const getAllDailyStatisticCont = async (req, res) => {
     try{
-        const allCategories = await getAllCategorys()
+        const allDailyStatistic = await getAllDailyStatistics()
        
-        if(!allCategories){
-            return serverResponse(res, 404, { message: "no capble to get all category's"})
+        if(!allDailyStatistic){
+            return serverResponse(res, 404, { message: "no capble to get all Daily Statistic's"})
         }
 
-        return serverResponse(res, 200, allCategories)
+        return serverResponse(res, 200, allDailyStatistic)
     } catch(e){
         console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to get all names from categorys'})
+        return serverResponse(res, 500, {message: 'internal error occured while trying to get all names from all Daily Statistic'})
     }
 }
-const getAllCategoryNumOfGamesCont = async (req, res) => {
-    try{
-        const allcategory = await getAllCategorys()
-        const arr=[]
-        let i=0
-        allcategory.forEach(category =>{arr.push(category.categoryNumOfQuestion)})
-        if(!allcategory){
-            return serverResponse(res, 404, { message: "no capble to get all category's"})
-        }
 
-        return serverResponse(res, 200, arr)
-    } catch(e){
-        console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to get all num of qustion in category'})
-    }
-}
-const getNumCategorysThetNumQuestionBelowfifthyCont = async (req, res) => {
-    try{
-        const allcategory = await getAllCategorys()
-        const names=[]
-        allcategory.forEach(category =>{
-             if(category.categoryNumOfQuestion<50)
-             {
-                names.push(category.categoryName);
-             }
-            
-        }
-        )
-        if(!allcategory){
-            return serverResponse(res, 404, { message: "no capble to get all category's"})
-        }
 
-        return serverResponse(res, 200,{message: `${names.length} have below 50 the names: categories ${names}`})
-    } catch(e){
-        console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to get all num of qustion in category'})
-    }
-}
 
 module.exports = {
-    getCategoryCont,
-    deleteCategoryCont,
-    createCategoryCont,
-    editCategoryCont,
-    getAllCategorysCont,
-    getAllCategoryNamesCont,
-    getAllCategoryNumOfGamesCont,
-    getNumCategorysThetNumQuestionBelowfifthyCont,
-    editCategoryByIdCont
+    getDailyStatisticCont,
+    deleteDailyStatisticCont,
+    editdailyStatisticCont,
+    createDailyStatisticCont,
+    getAllDailyStatisticPackagesCont,
+    getAllDailyStatisticCont,
 }

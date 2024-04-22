@@ -1,24 +1,19 @@
 const {
-    getCategoryCont,
-    deleteCategoryCont,
-    createCategoryCont,
-    editCategoryCont,
-    getAllCategorysCont,
-    getAllCategoryNamesCont,
-    getAllCategoryNumOfGamesCont,
-    getNumCategorysThetNumQuestionBelowfifthyCont,
-    editCategoryByIdCont
-} = require('../controllers/Category-controller')
+    getDailyStatisticCont,
+    deleteDailyStatisticCont,
+    editdailyStatisticCont,
+    createDailyStatisticCont,
+    getAllDailyStatisticPackagesCont,
+    getAllDailyStatisticCont,
+} = require('../controllers/DailyStatistic-controller')
 
 module.exports = function (app) {
     app
-        .get('/api/category/:categoryName', getCategoryCont)
-        .get('/api/categorys', getAllCategorysCont)
-        .get('/api/categorys/numOfGames', getAllCategoryNumOfGamesCont)
-        .get('/api/categorys/under50', getNumCategorysThetNumQuestionBelowfifthyCont)
-        .post('/api/category/:categoryName/edit/name',editCategoryCont)
-        .post('/api/category/:categoryId/edit',editCategoryByIdCont)
-        .post('/api/category/create',createCategoryCont)
-        .delete('/api/category/:categoryName/delete',deleteCategoryCont)
+        .get('/api/DailyStatistic/:DailyStatisticId', getDailyStatisticCont)
+        .get('/api/DailyStatistics',getAllDailyStatisticCont )
+        .get('/api/categorys/packages',getAllDailyStatisticPackagesCont )
+        .post('/api/category/:DailyStatisticId/edit',editdailyStatisticCont)
+        .post('/api/category/create',createDailyStatisticCont)
+        .delete('/api/category/:DailyStatisticId/delete',deleteDailyStatisticCont)
         
 }

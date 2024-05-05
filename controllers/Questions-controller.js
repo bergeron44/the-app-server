@@ -1,17 +1,14 @@
 const {
-    getQuestion,
-    getAllQuestions,
-    getBulkQuestions,
-    addQuestion,
-    removeQuestion,
-    removeAllQuestions,
-    updateQuestion,
-    getAllObjectsWithSameAttribute,
-    getNumObjectsWithSameAttribute,
-    getAllQuestionsWithSameCategory
+  getQuestion,
+  getAllQuestions,
+  getAttributeQuestions,
+  addQuestion,
+  removeQuestion,
+  updateDifficult,
+  updateQuestionUse
 
 } = require('../services/Question-services')
-const {getCategory,addCategory, updateCategory} = require('../services/Category-services')
+const {getQuestion,addQuestion, updateQuestion} = require('../services/Category-services')
 const serverResponse = require('../utils/serverResponse')
 
 const getQuestionCont = async (req, res) => {
@@ -28,12 +25,12 @@ const getQuestionCont = async (req, res) => {
         return serverResponse(res, 500, {message: 'internal error occured while trying to get Question'})
     }
 }
-const getAllQuestionCont = async (req, res) => {
+const getAllQuestionsCont = async (req, res) => {
   try{
       const allquestion = await getAllQuestions()
 
       if(!allquestion){
-          return serverResponse(res, 404, { message: "no question found"})
+          return serverResponse(res, 404, { message: "no questions found"})
       }
 
       return serverResponse(res, 200, allquestion)
@@ -42,158 +39,115 @@ const getAllQuestionCont = async (req, res) => {
       return serverResponse(res, 500, {message: 'internal error occured while trying to get all Questions'})
   }
 }
-const editQustionCont = async (req, res) => {
+const getCategoryQuestionsCont = async (req, res) => {
     try {
-      const newquestion={...req.body}
-      if (newquestion=={}) {
+      const categoryQuestions= await getAttributeQuestions(category, req.params.category)
+      if (!categoryQuestions) {
         return serverResponse(res, 404, {
-          message: 'No qustion send to update'
+          message: 'There are no questions in that category'
         });
       }
-      const question = await updateQuestion(req.params.questionId, newquestion);
-     
-      if (!question) {
+      return serverResponse(res, 200,categoryQuestions);
+    } catch (e) {
+      console.log(e)
+      return serverResponse(res, 500, {message: 'internal error occured while trying to get this category Questions'})
+    }
+  };
+  const getGameQuestionsCont = async (req, res) => {
+    try {
+      const gameQuestions= await getAttributeQuestions(game, req.params.game)
+      if (!gameQuestions) {
         return serverResponse(res, 404, {
-          message: 'No question with requested id'
+          message: 'There are no questions in that game'
         });
       }
-      const questionAfterUpdate = await getQuestion(req.params.questionId);
-      return serverResponse(res, 200, {
-        message: 'Your changes were successfull  your udate --'+questionAfterUpdate
-      });
+      return serverResponse(res, 200,gameQuestions);
     } catch (e) {
-      return serverResponse(res, 500, {
-        message: 'Internal error while trying to update Question'
-      });
+      console.log(e)
+      return serverResponse(res, 500, {message: 'internal error occured while trying to get this game Questions'})
     }
   };
-  const newQuestionCont = async (req, res) => {
-    try {
-      let newCatedory
-      let returnCategory
-      const question = {
-        ...req.body
-      };
-       const category= await getCategory(req.body.category)
-      if(!category)
-      {
-        newCatedory= await addCategory({"categoryName":req.body.category,"CategoryNumOfQuestion":1})
-        returnCategory=await getCategory(req.body.category)
-  
-      }
-      else
-      {//להוסיף לו אחד
-        category.categoryNumOfQuestion=category.categoryNumOfQuestion+1;
-        newCatedory=await updateCategory(category.categoryName,category);
-        returnCategory=await getCategory(req.body.category)
-      }
-      const newQuestion = await addQuestion(question);
-      if(!newQuestion)
-      {
-        return serverResponse(res, 500, {
-          message: 'not able to  add new qustion'
-        })
-      }
-      return serverResponse(res, 200, {
-        message: ' the qustion category== '
-      +returnCategory +" the qustion is"+ newQuestion });
-    } catch (e) {
-      return serverResponse(res, 500, {
-        message: 'Internal error while trying to add new qustion '
-      });
-    }
-  };
-  const deleteQuestionCont = async (req, res) => {
-    try {
-       const qustion= await getQuestion(req.params.questionId)
-       if (!qustion) {
-            return serverResponse(res, 404, { message: "qustion remove alredy" });
-         }
-        const category= await getCategory(qustion.category)
-        category.categoryNumOfQuestion=category.categoryNumOfQuestion-1;
-        const updateCategor=await updateCategory(category.categoryName,category)
-         const remove = await removeQuestion(req.params.questionId);
-  
-      return serverResponse(res, 200,  {
-        message: 'question :'+remove+"  delete and category :"+updateCategor+"  was update"
-      });
-    } catch (e) {
-      return serverResponse(res, 500, {
-        message: 'interrnel error tring to delete'
-      });
-    }
-  };
-  const getNumQuestionWithSameCtegoryCont = async (req, res) => {
+
+  const addQuestionCont = async (req, res) =>{
     try{
-        const numofqustionwithsamecategory = await getNumObjectsWithSameAttribute(req.params.categoryName, req.params.numOfQuestion)
+      const addQuestionConst = {...req.body}
+      if(addQuestionConst.answer === ""||addQuestionConst.question===""){
+          return serverResponse(res, 404, { message: "unable to add new question because you provided no question or answer"})
+      }
 
-        if(!numofqustionwithsamecategory){
-            return serverResponse(res, 404, { message: "no able to get random question from thet category"})
-        }
+          const newQuestionOb = await addQuestion(addQuestionConst)
+          if(!newQuestionOb){
+              return serverResponse(res, 404, { message: "unable to add new question"})
+          }
+          return serverResponse(res, 200, newQuestionOb)
 
-
-        return serverResponse(res, 200, numofqustionwithsamecategory)
-    } catch(e){
-        console.log(e)
-        return serverResponse(res, 500, {message: 'internal error occured while trying to get Questions from same category random'})
-    }
-}
-const checkAnswer = async (req, res) => {
-  try{
-      const question=await getQuestion(req.params.questionId);
-      if(!question){
-        return serverResponse(res, 404, { message: "no able to fing the question whith thet id"})
-    }
-     let rightAnswer
-     if(question.answer1.rightAnswer)
-         {
-          rightAnswer=question.answer1.answer
-         }
-     if(question.answer2.rightAnswer)
-         {
-          rightAnswer=question.answer2.answer
-         }
-     if(question.answer3.rightAnswer)
-         {
-          rightAnswer=question.answer3.answer
-         }
-     if(question.answer4.rightAnswer)
-         {
-          rightAnswer=question.answer4.answer
-         }
-       
-      
-      return serverResponse(res, 200, {message: 'this the right answer : '+rightAnswer} )
   } catch(e){
       console.log(e)
-      return serverResponse(res, 500, {message: 'internal error occured while trying to get Questions from same category random'})
+      return serverResponse(res, 500, {message: 'internal error occurred while trying to add question'})
   }
-}
-const getQuestionsWithSameCategoryCont =async(req, res)=>{
-  try{
-    const allQuestionWithSameCategory = await getAllQuestionsWithSameCategory(req.params.categoryName)
+  };
 
-    if(!allQuestionWithSameCategory){
-        return serverResponse(res, 404, { message: "no questions in thet category found"})
+const removeQuestionCont =async (req,res) =>{
+  try {
+    const question= await getQuestion(req.params.questionId)
+    if (!question) {
+         return serverResponse(res, 404, { message: "question does not exsist" });
+      }
+      const remove = await removeQuestion(req.params.questionId);
+
+   return serverResponse(res, 200,  {
+     message: 'question :'+remove
+   });
+ } catch (e) {
+   return serverResponse(res, 500, {
+     message: 'interrnel error trying to delete'
+   });
+ }
+};
+  const updateDifficultCont = async (req, res) => {
+    const table =getAllQuestions();
+    try{
+        for (const row of table){
+            const newDifficult= (row.successRate / row.appearance)%10;
+            const updated=await updateDifficult(row._id,newDifficult);
+            if(!updated){
+              return serverResponse(res, 404, { message: "question:"+row.question+" was not update" });
+            }
+        }
+        return serverResponse(res, 200,  {
+          message: "all questions were update"
+        });
     }
+    catch(e){
+      return serverResponse(res, 500, {
+        message: 'interrnel error trying to updating'
+      });
+    }
+  };
 
-    return serverResponse(res, 200, allQuestionWithSameCategory)
-} catch(e){
-    console.log(e)
-    return serverResponse(res, 500, {message: 'internal error occured while trying to get all Questions'})
-}
-}
-
-
-
+  const updateQuestionUseCont=async (req,res)=>{
+    try {
+      const updated=await updateQuestionUse(req._id,req.succeed);
+      if (!updated) {
+        return serverResponse(res, 404, { message: "question:"+row.question+" was not update" });
+      }
+      return serverResponse(res, 200,  {
+        message: "question:"+req._id+" was update"
+      });
+    } catch (e) {
+      return serverResponse(res, 500, {
+        message: 'interrnel error trying to updating'
+      });
+    }
+  };
 
 module.exports = {
     getQuestionCont,
-    getAllQuestionCont,
-    editQustionCont,
-    newQuestionCont,
-    deleteQuestionCont,
-    getNumQuestionWithSameCtegoryCont,
-    checkAnswer,
-    getQuestionsWithSameCategoryCont
+    getAllQuestionsCont,
+    getCategoryQuestionsCont,
+    getGameQuestionsCont,
+    addQuestionCont,
+    removeQuestionCont,
+    updateDifficultCont,
+    updateQuestionUseCont
 }

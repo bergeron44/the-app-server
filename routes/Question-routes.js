@@ -1,23 +1,22 @@
 const {
     getQuestionCont,
-    getAllQuestionCont,
-    editQustionCont,
-    newQuestionCont,
-    deleteQuestionCont,
-    getNumQuestionWithSameCtegoryCont,
-    checkAnswer,
-    getQuestionsWithSameCategoryCont
-} = require('../controllers/Question-controller')
-
+    getAllQuestionsCont,
+    getCategoryQuestionsCont,
+    getGameQuestionsCont,
+    addQuestionCont,
+    removeQuestionCont,
+    updateDifficultCont,
+    updateQuestionUseCont
+} = require('../controllers/Questions-controller')
 module.exports = function (app){
     app
         .get('/api/question/:questionId', getQuestionCont)
-        .get('/api/questions', getAllQuestionCont)
-        .get('/api//questions/:categoryName/:numOfQuestion', getNumQuestionWithSameCtegoryCont)//לא סיימתי
-        .get('/api/questions/category/:categoryName', getQuestionsWithSameCategoryCont)
-        .post('/api/question/:questionId/edit',editQustionCont)
-        .post('/api/question/create',newQuestionCont)
-        .post('/api/question/:questionId/trueAnswer',checkAnswer)
-        .delete('/api/question/:questionId/delete',deleteQuestionCont );
+        .get('/api/questions', getAllQuestionsCont)
+        .get('/api//questions/:categoryName', getCategoryQuestionsCont)
+        .get('/api/questions/:gameCat', getGameQuestionsCont)
+        .post('/api/question/:question',addQuestionCont)
+        .post('/api/question/:questionId/:succeed',updateQuestionUseCont)
+        .post('/api/questions',updateDifficultCont)
+        .delete('/api/question/:questionId',removeQuestionCont);
         
 };
